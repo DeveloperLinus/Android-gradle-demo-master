@@ -4,25 +4,45 @@ plugins {
 }
 
 android {
-    compileSdkVersion 32
-    buildToolsVersion "32.0.0"
-
+    compileSdkVersion 29
     defaultConfig {
         applicationId "com.linus.gradle"
-        minSdkVersion 16
-        targetSdkVersion 32
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion 21
+        targetSdkVersion 29
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
-        release {
+        debug {
+            applicationIdSuffix ".debug"
             minifyEnabled false
+            zipAlignEnabled false // Zipalign优化
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        release {
+            applicationIdSuffix ".release"
+            minifyEnabled true // Android 插件默认会使用 ProGuard 插件，并且如果 Build Type 中使用 ProGuard 的 minifyEnabled属性开启的话，会默认创建对应的 task
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    flavorDimensions "app"
+    productFlavors {
+        tongdaozha {
+            applicationId "com.gradle.tongdaozha"
+            versionCode 2
+            versionName "2.1.0"
+            proguardFile 'tongdaozha-rules.txt' // 使用自己的混淆文件
+        }
+        renlianshibie {
+            applicationId "com.gradle.renlianshibie"
+            versionCode 3
+            versionName "3.1.0"
+            proguardFile 'renlianshibie-rules.txt'
+        }
+    }
+
+    // 设置编译语言版本
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -30,18 +50,37 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
+    dataBinding {
+        enabled true
+    }
+
+    // task控制，apk生成重新命名
+    android.applicationVariants.all { variant ->
+        variant.outputs.all {
+            if (variant.buildType.name == 'release') {
+                outputFileName = "${variant.applicationId}-V${variant.versionName}-${variant.versionCode}.apk"
+            } else if (variant.buildType.name == 'debug') {
+                outputFileName = "${variant.applicationId}-V${variant.versionName}-${variant.versionCode}.apk"
+            }
+        }
+    }
 }
 
 dependencies {
-
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation 'androidx.core:core-ktx:1.7.0'
-    implementation 'androidx.appcompat:appcompat:1.4.1'
-    implementation 'com.google.android.material:material:1.5.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
+    implementation 'androidx.core:core-ktx:1.2.0'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'com.google.android.material:material:1.1.0'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'androidx.navigation:navigation-fragment-ktx:2.2.2'
     implementation 'androidx.navigation:navigation-ui-ktx:2.2.2'
     testImplementation 'junit:junit:4.+'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+//    implementation files('libs/commonLib-debug.aar')
+    api("com.google.guava:guava:29.0-android")
+    implementation 'org.greenrobot:eventbus:3.1.1'
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.8"
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.8"
 }

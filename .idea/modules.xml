@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Android-gradle-demo-master.iml" filepath="$PROJECT_DIR$/.idea/modules/Android-gradle-demo-master.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Android-gradle-demo-master.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Android-gradle-demo-master.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/commonLib/Android-gradle-demo-master.commonLib.iml" filepath="$PROJECT_DIR$/.idea/modules/commonLib/Android-gradle-demo-master.commonLib.iml" />
     </modules>
   </component>
 </project>
